@@ -1,3 +1,4 @@
+import { environment } from "./config"
 import { Server } from "./presentation/server"
 
 (() => {
@@ -5,5 +6,5 @@ import { Server } from "./presentation/server"
 })()
 
 async function main() {
-  new Server({}).start()
+  new Server({ port: environment.PORT }).start()
 }
