@@ -1,4 +1,5 @@
 import { environment } from "./config"
+import { AppRouter } from "./presentation/routes"
 import { Server } from "./presentation/server"
 
 (() => {
@@ -6,5 +7,5 @@ import { Server } from "./presentation/server"
 })()
 
 async function main() {
-  new Server({ port: environment.PORT }).start()
+  new Server({ port: environment.PORT, router: AppRouter.routes }).start()
 }
