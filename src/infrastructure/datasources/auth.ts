@@ -3,6 +3,7 @@ import { AuthDataSource as _AuthDataSource } from "../../domain/datasources/auth
 import type { RegisterUserDTO } from "../../domain/dtos/auth";
 import { User } from "../../domain/entities/user";
 import { HttpError } from "../../domain/errors/http";
+import { Encryption } from "../../utils";
 
 export class AuthDataSource implements _AuthDataSource {
   async register(dto: RegisterUserDTO): Promise<User> {
@@ -15,7 +16,7 @@ export class AuthDataSource implements _AuthDataSource {
 
       if (exists) throw HttpError.badRequest("User already exists")
 
-      const user = await UserModel.create({ name, email, password })
+      const user = await UserModel.create({ name, email, password: await Encryption.hash(password) })
 
       await user.save()
 
