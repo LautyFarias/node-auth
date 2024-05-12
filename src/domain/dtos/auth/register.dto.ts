@@ -21,6 +21,6 @@ export class RegisterUserDTO {
     if (!password) return [undefined, "Missing password"]
     if (typeof password !== "string" || password.length < 6) [undefined, "Invalid password"]
 
-    return [new RegisterUserDTO(name as string, email as string, password as string), undefined]
+    return [new RegisterUserDTO(name as string, email as string, String(password)), undefined]
   }
 }
