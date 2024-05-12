@@ -1,3 +1,4 @@
+import { UserModel } from "../../database/mongodb/models";
 import { AuthDataSource as _AuthDataSource } from "../../domain/datasources/auth";
 import type { RegisterUserDTO } from "../../domain/dtos/auth";
 import { User } from "../../domain/entities/user";
@@ -10,7 +11,15 @@ export class AuthDataSource implements _AuthDataSource {
 
     try {
 
-      return new User({ id: "1", email, name, password, roles: ["ADMIN"] })
+      const exists = await UserModel.exists({ email })
+
+      if (exists) throw HttpError.badRequest("User already exists")
+
+      const user = await UserModel.create({ name, email, password })
+
+      await user.save()
+
+      return new User({ id: user.id, email, name, password, roles: user.roles })
 
     } catch (error) {
       if (error instanceof HttpError) throw error
