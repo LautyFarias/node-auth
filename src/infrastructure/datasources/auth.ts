@@ -3,6 +3,7 @@ import { AuthDataSource as _AuthDataSource } from "../../domain/datasources/auth
 import type { RegisterUserDTO } from "../../domain/dtos/auth";
 import { User } from "../../domain/entities/user";
 import { HttpError } from "../../domain/errors/http";
+import { UserMapper } from "../mappers/user";
 
 
 type HashFunction = (password: string) => Promise<string>
@@ -30,7 +31,7 @@ export class AuthDataSource implements _AuthDataSource {
 
       await user.save()
 
-      return new User({ id: user.id, email, name, password, roles: user.roles })
+      return UserMapper.userEntityFromObject(user)
 
     } catch (error) {
       if (error instanceof HttpError) throw error
