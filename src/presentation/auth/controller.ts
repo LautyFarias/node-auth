@@ -1,9 +1,18 @@
 import type { Request, Response } from "express"
 import { RegisterUserDTO } from "../../domain/dtos/auth"
+import { HttpError } from "../../domain/errors/http"
 import type { AuthRepository } from "../../domain/repositories/auth"
 
 export class AuthController {
   constructor(private readonly repository: AuthRepository) { }
+
+  private handlerError = (error: unknown, res: Response) => {
+    if (error instanceof HttpError) return res.status(error.status).json({ error: error.message })
+
+    console.error(error)
+
+    return res.status(500).json({ error: "Internal server error" })
+  }
 
   register = (req: Request, res: Response) => {
     const [dto, error] = RegisterUserDTO.create(req.body)
@@ -14,7 +23,7 @@ export class AuthController {
 
     this.repository.register(dto)
       .then(user => res.json(user))
-      .catch(error => res.status(500).json({ error }))
+      .catch(error => this.handlerError(error, res))
   }
 
   login = (req: Request, res: Response) => {
