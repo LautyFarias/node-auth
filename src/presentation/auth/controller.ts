@@ -4,6 +4,7 @@ import { HttpError } from "../../domain/errors/http"
 import type { AuthRepository } from "../../domain/repositories/auth"
 import { RegisterUser } from "../../domain/use-cases/auth"
 import { jwt } from "../../utils"
+import { LoginUserDTO } from "../../domain/dtos/auth/login.dto"
 
 export class AuthController {
   constructor(private readonly repository: AuthRepository) {}
@@ -31,6 +32,10 @@ export class AuthController {
   }
 
   login = (req: Request, res: Response) => {
-    res.json("login")
+    const [dto, error] = LoginUserDTO.create(req.body)
+
+    if (error) return res.status(400).json({ error })
+
+    return res.json(req.body)
   }
 }
