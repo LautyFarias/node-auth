@@ -26,7 +26,7 @@ export class AuthController {
     this.repository
       .register(dto)
       .then(async (user) =>
-        res.json({ user, token: await JWT.generate({ email: user.email }) }),
+        res.json({ user, token: await JWT.generate({ id: user.id }) }),
       )
       .catch((error) => this.handlerError(error, res))
   }
