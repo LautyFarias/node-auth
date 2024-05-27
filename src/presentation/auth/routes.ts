@@ -3,6 +3,7 @@ import { AuthDataSource } from "../../infrastructure/datasources/auth"
 import { AuthRepository } from "../../infrastructure/repositories/auth"
 import { Encryption } from "../../utils"
 import { AuthController } from "./controller"
+import { AuthMiddleware } from "./middleware"
 
 export class AuthRouter {
   static get routes() {
@@ -14,7 +15,7 @@ export class AuthRouter {
     const controller = new AuthController(repository)
 
     router.post("/login", controller.login)
-    router.post("/register", controller.register)
+    router.post("/register", AuthMiddleware.validateJWT, controller.register)
 
     return router
   }
