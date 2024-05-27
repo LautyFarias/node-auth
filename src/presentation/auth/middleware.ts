@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express"
 import { JWT } from "../../utils"
+import { UserModel } from "../../database/mongodb/models"
 
 export class AuthMiddleware {
   static validateJWT = async (
@@ -18,7 +19,11 @@ export class AuthMiddleware {
 
       if (!payload) return res.status(401).end()
 
-      req.body.payload = payload
+      const user = await UserModel.findById(payload.id)
+
+      if (!user) return res.status(401).end()
+
+      req.body.user = user
 
       next()
     } catch (error) {
