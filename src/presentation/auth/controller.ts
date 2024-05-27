@@ -2,6 +2,7 @@ import type { Request, Response } from "express"
 import { RegisterUserDTO } from "../../domain/dtos/auth"
 import { HttpError } from "../../domain/errors/http"
 import type { AuthRepository } from "../../domain/repositories/auth"
+import { RegisterUser } from "../../domain/use-cases/auth"
 import { jwt } from "../../utils"
 
 export class AuthController {
@@ -23,11 +24,9 @@ export class AuthController {
       return res.status(400).json({ error })
     }
 
-    this.repository
-      .register(dto)
-      .then(async (user) =>
-        res.json({ user, token: await jwt.generate({ id: user.id }) }),
-      )
+    new RegisterUser(this.repository, jwt.generate.bind(jwt))
+      .execute(dto)
+      .then((data) => res.json(data))
       .catch((error) => this.handlerError(error, res))
   }
 

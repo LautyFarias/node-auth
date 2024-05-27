@@ -5,6 +5,11 @@ interface Options {
   expiration: string
 }
 
+export type generateMethod = (
+  payload: Object,
+  options?: Options,
+) => Promise<string>
+
 class JWT {
   constructor(private readonly seed: string) {}
 
