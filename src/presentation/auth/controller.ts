@@ -2,7 +2,7 @@ import type { Request, Response } from "express"
 import { RegisterUserDTO } from "../../domain/dtos/auth"
 import { HttpError } from "../../domain/errors/http"
 import type { AuthRepository } from "../../domain/repositories/auth"
-import { JWT } from "../../utils"
+import { jwt } from "../../utils"
 
 export class AuthController {
   constructor(private readonly repository: AuthRepository) {}
@@ -26,7 +26,7 @@ export class AuthController {
     this.repository
       .register(dto)
       .then(async (user) =>
-        res.json({ user, token: await JWT.generate({ id: user.id }) }),
+        res.json({ user, token: await jwt.generate({ id: user.id }) }),
       )
       .catch((error) => this.handlerError(error, res))
   }

@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express"
-import { JWT } from "../../utils"
+import { jwt } from "../../utils"
 import { UserModel } from "../../database/mongodb/models"
 
 export class AuthMiddleware {
@@ -15,7 +15,7 @@ export class AuthMiddleware {
     const token = auth.split(" ").at(1) ?? ""
 
     try {
-      const payload = await JWT.decode<{ id: string }>(token)
+      const payload = await jwt.decode<{ id: string }>(token)
 
       if (!payload) return res.status(401).end()
 
