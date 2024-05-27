@@ -19,4 +19,14 @@ export class JWT {
       })
     })
   }
+
+  static async decode(token: string) {
+    return new Promise<string | jwt.JwtPayload | null>((resolve) => {
+      jwt.verify(token, "SEED", (err, decoded) => {
+        if (err) resolve(null)
+
+        resolve(decoded!)
+      })
+    })
+  }
 }

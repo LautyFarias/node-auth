@@ -1,7 +1,12 @@
 import type { NextFunction, Request, Response } from "express"
+import { JWT } from "../../utils"
 
 export class AuthMiddleware {
-  static validateJWT = (req: Request, res: Response, next: NextFunction) => {
+  static validateJWT = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
     const auth = req.header("Authorization")
 
     if (!auth || !auth.startsWith("Bearer ")) return res.status(401).end()
@@ -9,11 +14,11 @@ export class AuthMiddleware {
     const token = auth.split(" ").at(1) ?? ""
 
     try {
-      // const payload = JWT
+      const payload = await JWT.decode(token)
 
-      req.body.token = token
+      if (!payload) return res.status(401).end()
 
-      console.log(req.body) // token should be in body
+      req.body.payload = payload
 
       next()
     } catch (error) {
