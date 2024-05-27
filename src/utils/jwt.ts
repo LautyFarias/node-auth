@@ -20,12 +20,12 @@ export class JWT {
     })
   }
 
-  static async decode(token: string) {
-    return new Promise<string | jwt.JwtPayload | null>((resolve) => {
+  static async decode<T extends { [key: string]: any }>(token: string) {
+    return new Promise<T | null>((resolve) => {
       jwt.verify(token, "SEED", (err, decoded) => {
         if (err) resolve(null)
 
-        resolve(decoded!)
+        resolve(decoded as T)
       })
     })
   }

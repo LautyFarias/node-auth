@@ -14,7 +14,7 @@ export class AuthMiddleware {
     const token = auth.split(" ").at(1) ?? ""
 
     try {
-      const payload = await JWT.decode(token)
+      const payload = await JWT.decode<{ id: string }>(token)
 
       if (!payload) return res.status(401).end()
 
