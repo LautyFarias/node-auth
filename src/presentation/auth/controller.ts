@@ -5,10 +5,11 @@ import type { AuthRepository } from "../../domain/repositories/auth"
 import { JWT } from "../../utils"
 
 export class AuthController {
-  constructor(private readonly repository: AuthRepository) { }
+  constructor(private readonly repository: AuthRepository) {}
 
   private handlerError = (error: unknown, res: Response) => {
-    if (error instanceof HttpError) return res.status(error.status).json({ error: error.message })
+    if (error instanceof HttpError)
+      return res.status(error.status).json({ error: error.message })
 
     console.error(error)
 
@@ -22,9 +23,12 @@ export class AuthController {
       return res.status(400).json({ error })
     }
 
-    this.repository.register(dto)
-      .then(async user => res.json({ user, token: await JWT.generate({ email: user.email }) }))
-      .catch(error => this.handlerError(error, res))
+    this.repository
+      .register(dto)
+      .then(async (user) =>
+        res.json({ user, token: await JWT.generate({ email: user.email }) }),
+      )
+      .catch((error) => this.handlerError(error, res))
   }
 
   login = (req: Request, res: Response) => {
