@@ -5,13 +5,16 @@ describe("Login", () => {
     test("should give a response with a status code 200 and a body with the user and its token", async () => {
       const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
+headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           email: "john.doe@example.com",
           password: "12345678",
         }),
       })
 
-      expect(response.status).toBe(200)
+      expect(response.status).to.be.equal(200)
 
       const data = await response.json()
 
