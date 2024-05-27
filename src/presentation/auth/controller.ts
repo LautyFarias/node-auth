@@ -2,7 +2,7 @@ import type { Request, Response } from "express"
 import { RegisterUserDTO } from "../../domain/dtos/auth"
 import { HttpError } from "../../domain/errors/http"
 import type { AuthRepository } from "../../domain/repositories/auth"
-import { RegisterUser } from "../../domain/use-cases/auth"
+import { LoginUser, RegisterUser } from "../../domain/use-cases/auth"
 import { jwt } from "../../utils"
 import { LoginUserDTO } from "../../domain/dtos/auth/login.dto"
 
@@ -36,6 +36,9 @@ export class AuthController {
 
     if (error) return res.status(400).json({ error })
 
-    return res.json(req.body)
+    new LoginUser(this.repository, jwt.generate.bind(jwt))
+      .execute(dto)
+      .then((data) => res.json(data))
+      .catch((error) => this.handlerError(error, res))
   }
 }
