@@ -11,9 +11,9 @@ class JWT {
   async generate(payload: Object, options: Options = { expiration: "2h" }) {
     const { expiration: expiresIn } = options
 
-    return new Promise<string | null>((resolve) => {
+    return new Promise<string>((resolve, reject) => {
       jwtlib.sign(payload, this.seed, { expiresIn }, (err, token) => {
-        if (err) return resolve(null)
+        if (err) return reject(err)
 
         return resolve(token!)
       })
